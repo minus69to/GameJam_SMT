@@ -18,7 +18,7 @@ screen_height = 600
 gameWindow = pygame.display.set_mode((screen_width, screen_height))
 
 #Background Image
-bgimg = pygame.image.load("backgroundSMT.jpg")
+bgimg = pygame.image.load("bgimg2SMT.jpg")
 bgimg = pygame.transform.scale(bgimg, (screen_width, screen_height)).convert_alpha()
 
 
@@ -29,6 +29,7 @@ clock = pygame.time.Clock()
 
 font = pygame.font.SysFont(None, 55)
 font1 = pygame.font.Font('1f.ttf', 40)
+font3 = pygame.font.Font('3f.ttf', 30)
 font4 = pygame.font.Font('4f.ttf', 50)
 font5 = pygame.font.Font('4f.ttf', 30)
 
@@ -40,7 +41,7 @@ def text_screen(text, color, x, y, num):
     elif num == 2:
         screen_text = font1.render(text, True, color)
     elif num == 3:
-        screen_text = font4.render(text, True, color)
+        screen_text = font3.render(text, True, color)
     elif num == 4:
         screen_text = font4.render(text, True, color)
     elif num == 5:
@@ -71,7 +72,7 @@ def welcome():
                 exit_game = True
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    pygame.mixer.music.load('bgmSMT.mp3')
+                    pygame.mixer.music.load('background2SMT.mp3')
                     pygame.mixer.music.play()
                     gameloop()
 
@@ -156,7 +157,7 @@ def gameloop():
             snake_y = snake_y + velocity_y
 
             if abs(snake_x - food_x) < 15 and abs(snake_y - food_y) < 15:
-                pygame.mixer.music.load('mixpointSMT.mp3')
+                pygame.mixer.music.load('mix2SMT.mp3')
                 pygame.mixer.music.play()
 
                 init_velocity = init_velocity + 1
@@ -171,7 +172,7 @@ def gameloop():
 
             gameWindow.fill(white)
             gameWindow.blit(bgimg, (0, 0))
-            text_screen("Score: " + str(score) + "  Hiscore: "+str(hiscore), red, 5, 5,4)
+            text_screen("Score : " + str(score) + "                                              Hiscore: "+str(hiscore), black, 5, 5,3)
             pygame.draw.rect(gameWindow, red, [food_x, food_y, snake_size, snake_size])
             # pygame.draw.circle (gameWindow, red, [food_x, food_y],snake_size/2)
 
@@ -186,14 +187,14 @@ def gameloop():
 
             if head in snk_list[:-1]:
                 game_over = True
-                pygame.mixer.music.load('gameoverSMT.mp3')
+                pygame.mixer.music.load('gameover2SMT.mp3')
                 pygame.mixer.music.play()
 
             if snake_x<0 or snake_x>screen_width or snake_y<0 or snake_y>screen_height:
                 game_over = True
-                pygame.mixer.music.load('gameoverSMT.mp3')
+                pygame.mixer.music.load('gameover2SMT.mp3')
                 pygame.mixer.music.play()
-            plot_snake(gameWindow, black, snk_list, snake_size)
+            plot_snake(gameWindow, (0,0,255), snk_list, snake_size)
         pygame.display.update()
         clock.tick(fps)
 
