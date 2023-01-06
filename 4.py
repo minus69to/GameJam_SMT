@@ -2,9 +2,13 @@ import pygame
 import random
 import os
 
+
+hFlag = 0
+vFlag = 0
 pygame.mixer.init()
 
 pygame.init()
+
 
 
 # Colors
@@ -13,7 +17,7 @@ red = (255, 0, 0)
 black = (0, 0, 0)
 
 # Creating window
-screen_width = 900
+screen_width = 800
 screen_height = 600
 gameWindow = pygame.display.set_mode((screen_width, screen_height))
 
@@ -83,6 +87,8 @@ def welcome():
 # Game Loop
 def gameloop():
     # Game specific variables
+    hFlag = 0
+    vFlag =0
     exit_game = False
     game_over = False
     snake_x = 45
@@ -90,7 +96,10 @@ def gameloop():
     velocity_x = 0
     velocity_y = 0
     snk_list = []
+    snk_listBonus = []
     snk_length = 1
+
+
     # Check if hiscore file exists
     if(not os.path.exists("hiscore.txt")):
         with open("hiscore.txt", "w") as f:
@@ -105,6 +114,9 @@ def gameloop():
     init_velocity = 5
     snake_size = 30
     fps = 60
+    bonus = (int((random.randint(40, 70) / 10)) * 10)
+    bouns_x = random.randint(50, screen_width - 50)
+    bouns_y = random.randint(50, screen_height - 50)
     while not exit_game:
         if game_over:
             with open("hiscore.txt", "w") as f:
@@ -135,20 +147,40 @@ def gameloop():
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RIGHT:
-                        velocity_x = init_velocity
-                        velocity_y = 0
+                       if hFlag==0:
+                           hFlag =1
+                       if  hFlag==1 :
+                           velocity_x = init_velocity
+                           velocity_y = 0
+                           vFlag=0
+                       else:
+                           pass
 
                     if event.key == pygame.K_LEFT:
-                        velocity_x = - init_velocity
-                        velocity_y = 0
+                        if hFlag == 0:
+                            hFlag = -1
+                        if hFlag == -1:
+                            velocity_x = -init_velocity
+                            velocity_y = 0
+                            vFlag=0
+                        else:
+                            pass
 
                     if event.key == pygame.K_UP:
-                        velocity_y = - init_velocity
-                        velocity_x = 0
+                        if vFlag==0:
+                            vFlag=1
+                        if vFlag==1:
+                            velocity_y = - init_velocity
+                            velocity_x = 0
+                            hFlag=0
 
                     if event.key == pygame.K_DOWN:
-                        velocity_y = init_velocity
-                        velocity_x = 0
+                        if vFlag == 0:
+                            vFlag = -1
+                        if vFlag == -1:
+                            velocity_y =  init_velocity
+                            velocity_x = 0
+                            hFlag = 0
 
                     if event.key == pygame.K_q:
                         score +=10
@@ -156,15 +188,15 @@ def gameloop():
             snake_x = snake_x + velocity_x
             snake_y = snake_y + velocity_y
 
-            if abs(snake_x - food_x) < 28 and abs(snake_y - food_y) < 28:
+            if abs(snake_x - food_x) < 26 and abs(snake_y - food_y) < 26:
                 pygame.mixer.music.load('mix2SMT.mp3')
                 pygame.mixer.music.play()
 
                 init_velocity = init_velocity + 1
 
                 score +=10
-                food_x = random.randint(20, screen_width / 1.2)
-                food_y = random.randint(20, screen_height / 1.2)
+                food_x = random.randint(20, screen_width // 1.2)
+                food_y = random.randint(20, screen_height // 1.2)
                 snk_length +=5
 
                 if score>int(hiscore):
@@ -174,6 +206,7 @@ def gameloop():
             gameWindow.blit(bgimg, (0, 0))
             text_screen("Score : " + str(score) + "                                              Hiscore: "+str(hiscore), black, 5, 5,3)
             # pygame.draw.rect(gameWindow, red, [food_x, food_y, snake_size, snake_size])
+
             pygame.draw.circle (gameWindow, red, [food_x, food_y],snake_size/2.5)
 
 
@@ -196,6 +229,32 @@ def gameloop():
                 pygame.mixer.music.load('gameover2SMT.mp3')
                 pygame.mixer.music.play()
             plot_snake(gameWindow, (0,0,255), snk_list, snake_size)
+
+            ##############################
+            if score <= bonus <= score+20 :
+
+                pygame.draw.rect(gameWindow, (69,69,69), [bouns_x, bouns_y,snake_size*1.5,snake_size*1.5])
+                #print(bonus)
+
+            ##############################
+            if abs(snake_x - bouns_x) < 26 and abs(snake_y - bouns_y) < 26 and score <= bonus <= score+20 :
+                pygame.mixer.music.load('hahaSMT.mp3')
+                pygame.mixer.music.play()
+
+                # init_velocity = 5
+
+                sc_check = random.randint(1,3)
+                if sc_check == 1:
+                    score = score + 10
+                    init_velocity = 5
+                    print(score)
+                else:
+                    score += 20
+                    init_velocity = init_velocity + 5
+                    print(score)
+                # snk_length = 1
+
+
         pygame.display.update()
         clock.tick(fps)
 
