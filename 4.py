@@ -182,13 +182,12 @@ def gameloop():
                             velocity_x = 0
                             hFlag = 0
 
-                    if event.key == pygame.K_q:
-                        score +=10
+
 
             snake_x = snake_x + velocity_x
             snake_y = snake_y + velocity_y
 
-            if abs(snake_x - food_x) < 26 and abs(snake_y - food_y) < 26:
+            if abs(snake_x - food_x) < 25 and abs(snake_y - food_y) < 25:
                 pygame.mixer.music.load('mix2SMT.mp3')
                 pygame.mixer.music.play()
 
@@ -207,7 +206,7 @@ def gameloop():
             text_screen("Score : " + str(score) + "                                              Hiscore: "+str(hiscore), black, 5, 5,3)
             # pygame.draw.rect(gameWindow, red, [food_x, food_y, snake_size, snake_size])
 
-            pygame.draw.circle (gameWindow, red, [food_x, food_y],snake_size/2.5)
+            pygame.draw.rect (gameWindow, red, [food_x, food_y,snake_size/1.5,snake_size/1.5])
 
 
             head = []
@@ -224,34 +223,35 @@ def gameloop():
                 pygame.mixer.music.load('gameover2SMT.mp3')
                 pygame.mixer.music.play()
 
-            if snake_x<0 or snake_x>screen_width or snake_y<0 or snake_y>screen_height:
+            if snake_x<0 or snake_x>screen_width-30 or snake_y<0 or snake_y>screen_height-30:
                 game_over = True
                 pygame.mixer.music.load('gameover2SMT.mp3')
                 pygame.mixer.music.play()
             plot_snake(gameWindow, (0,0,255), snk_list, snake_size)
 
             ##############################
-            if score <= bonus <= score+20 :
-
-                pygame.draw.rect(gameWindow, (69,69,69), [bouns_x, bouns_y,snake_size*1.5,snake_size*1.5])
-                #print(bonus)
+            # if score <= bonus <= score+20 :
+            #     pygame.draw.rect(gameWindow, (69,69,69), [bouns_x, bouns_y,snake_size*1.5,snake_size*1.5])
 
             ##############################
-            if abs(snake_x - bouns_x) < 26 and abs(snake_y - bouns_y) < 26 and score <= bonus <= score+20 :
-                pygame.mixer.music.load('hahaSMT.mp3')
-                pygame.mixer.music.play()
+            if  score <= bonus <= score+20 :
 
+
+                pygame.draw.rect(gameWindow, (69, 69, 69), [bouns_x, bouns_y, snake_size/1.5,snake_size/1.5])
+                if abs(snake_x - bouns_x) < 25 and abs(snake_y - bouns_y) < 25:
+                    pygame.mixer.music.load('hahaSMT.mp3')
+                    pygame.mixer.music.play()
                 # init_velocity = 5
 
-                sc_check = random.randint(1,3)
-                if sc_check == 1:
-                    score = score + 10
-                    init_velocity = 5
-                    print(score)
-                else:
-                    score += 20
-                    init_velocity = init_velocity + 5
-                    print(score)
+                    sc_check = random.randint(1,3)
+                    if sc_check == 1:
+                        score = score - 10
+                        init_velocity = init_velocity + 1
+                        print(score)
+                    else:
+                        score = score + 10
+                        init_velocity = init_velocity + 1
+                        print(score)
                 # snk_length = 1
 
 
